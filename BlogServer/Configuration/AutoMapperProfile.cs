@@ -23,10 +23,10 @@ namespace BlogServer.Configuration
             CreateMap<CommentPutRequest, Comment>();
 
             // User
-            CreateMap<UserRequest, User>();
-            CreateMap<LoginRequest, User>();
-            CreateMap<RegisterRequest, User>();
-            CreateMap<UpdateUserRequest, User>();
+            CreateMap<UserRequest, AppUser>();
+            CreateMap<LoginRequest, AppUser>();
+            CreateMap<RegisterRequest, AppUser>();
+            CreateMap<UpdateUserRequest, AppUser>();
         }
     }
 }

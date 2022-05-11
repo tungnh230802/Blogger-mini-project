@@ -15,11 +15,11 @@ namespace BlogBLL.Services
 {
     public class UserService : IUserService
     {
-        private UserManager<User> _userManager;
-        private SignInManager<User> _signInManager;
+        private UserManager<AppUser> _userManager;
+        private SignInManager<AppUser> _signInManager;
         private IConfiguration _configuration;
         private IMapper _mapper;
-        public UserService(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration configuration, IMapper mapper)
+        public UserService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IConfiguration configuration, IMapper mapper)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -47,7 +47,7 @@ namespace BlogBLL.Services
 
         public async Task<bool> Register(RegisterRequest registerRequest)
         {
-            var user = _mapper.Map<User>(registerRequest);
+            var user = _mapper.Map<AppUser>(registerRequest);
 
             var result = await _userManager.CreateAsync(user, registerRequest.Password);
 
@@ -58,7 +58,7 @@ namespace BlogBLL.Services
             return false;
         }
 
-        private async Task<Claim[]> GetClaim(User user)
+        private async Task<Claim[]> GetClaim(AppUser user)
         {
             var roles = await _userManager.GetRolesAsync(user);
             var claims = new[]

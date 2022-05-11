@@ -54,7 +54,7 @@ namespace BlogBLL.Services
             return posts;
         }
 
-        public async Task<Post> GetById(int id)
+        public async Task<Post> GetById(Guid id)
         {
             var post = await _postRepository.dbSet.FindAsync(id);
 

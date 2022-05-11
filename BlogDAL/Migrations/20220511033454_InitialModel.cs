@@ -75,14 +75,13 @@ namespace BlogDAL.Migrations
                 name: "Posts",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     authorId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     slug = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     summary = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     createAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    updateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    updateAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     thumbnail = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     content = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -183,36 +182,34 @@ namespace BlogDAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PostComments",
+                name: "Comments",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    parentId = table.Column<int>(type: "int", nullable: true),
-                    postId = table.Column<int>(type: "int", nullable: true),
-                    title = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    createAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    updateAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    parentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    postId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     content = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    userId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    userId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    createAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    updateAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PostComments", x => x.id);
+                    table.PrimaryKey("PK_Comments", x => x.id);
                     table.ForeignKey(
-                        name: "FK_PostComments_PostComments_parentId",
+                        name: "FK_Comments_Comments_parentId",
                         column: x => x.parentId,
-                        principalTable: "PostComments",
+                        principalTable: "Comments",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_PostComments_Posts_postId",
+                        name: "FK_Comments_Posts_postId",
                         column: x => x.postId,
                         principalTable: "Posts",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_PostComments_Users_userId",
+                        name: "FK_Comments_Users_userId",
                         column: x => x.userId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -220,18 +217,18 @@ namespace BlogDAL.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PostComments_parentId",
-                table: "PostComments",
+                name: "IX_Comments_parentId",
+                table: "Comments",
                 column: "parentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PostComments_postId",
-                table: "PostComments",
+                name: "IX_Comments_postId",
+                table: "Comments",
                 column: "postId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PostComments_userId",
-                table: "PostComments",
+                name: "IX_Comments_userId",
+                table: "Comments",
                 column: "userId");
 
             migrationBuilder.CreateIndex(
@@ -282,7 +279,7 @@ namespace BlogDAL.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "PostComments");
+                name: "Comments");
 
             migrationBuilder.DropTable(
                 name: "RoleClaims");

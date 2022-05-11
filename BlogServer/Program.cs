@@ -15,9 +15,9 @@ namespace BlogServer
         public async static Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
-            IServiceScope scope = await SeedData(host);
-
             await host.RunAsync();
+            //IServiceScope scope = await SeedData(host);
+
         }
 
         private static async Task<IServiceScope> SeedData(IHost host)
@@ -27,10 +27,10 @@ namespace BlogServer
             try
             {
                 var context = services.GetRequiredService<BlogContext>();
-                var userManager = services.GetRequiredService<UserManager<User>>();
+                var userManager = services.GetRequiredService<UserManager<AppUser>>();
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                 await context.Database.MigrateAsync();
-                await BlogDAL.Data.SeedData.SeedUsers(userManager, roleManager);
+                //await BlogDAL.Data.SeedData.SeedUsers(userManager, roleManager);
             }
             catch (Exception ex)
             {

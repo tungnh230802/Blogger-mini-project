@@ -9,7 +9,6 @@ using System;
 using BlogBLL.ModelRequest.Post;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
-using BlogRepository.Interfaces;
 
 namespace BlogServer.Controllers
 {
@@ -55,7 +54,7 @@ namespace BlogServer.Controllers
 
         // GET: api/Posts/5
         [HttpGet("{id}", Name = "GetPost")]
-        public async Task<IActionResult> GetPost(int id)
+        public async Task<IActionResult> GetPost(Guid id)
         {
             try
             {
@@ -75,7 +74,7 @@ namespace BlogServer.Controllers
         // PUT: api/Posts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPost(int id, PostPutRequest postPutRequest)
+        public async Task<IActionResult> PutPost(Guid id, PostPutRequest postPutRequest)
         {
             try
             {
@@ -142,7 +141,7 @@ namespace BlogServer.Controllers
 
         // DELETE: api/Posts/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePost(int id)
+        public async Task<IActionResult> DeletePost(Guid id)
         {
             try
             {

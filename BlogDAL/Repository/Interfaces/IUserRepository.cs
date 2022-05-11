@@ -2,7 +2,7 @@
 
 namespace BlogRepository.Interfaces
 {
-    public interface IUserRepository : IGenericRepository<User>
+    public interface IUserRepository : IGenericRepository<AppUser>
     {
     }
 }

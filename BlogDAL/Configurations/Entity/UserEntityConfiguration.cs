@@ -5,17 +5,14 @@ using System;
 
 namespace BlogDAL.Configurations
 {
-    public class UserEntityConfiguration : IEntityTypeConfiguration<User>
+    public class UserEntityConfiguration : IEntityTypeConfiguration<AppUser>
     {
-        public void Configure(EntityTypeBuilder<User> builder)
+        public void Configure(EntityTypeBuilder<AppUser> builder)
         {
             builder.Property(u => u.profile)
                 .HasMaxLength(256);
             builder.Property(u => u.intro)
                 .HasMaxLength(256);
-
-            builder.Property(u => u.registerAt)
-                .HasDefaultValue(DateTime.Now);
         }
     }
 }

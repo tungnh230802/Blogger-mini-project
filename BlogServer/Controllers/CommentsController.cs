@@ -35,7 +35,7 @@ namespace BlogServer.Controllers
         #region Method
         // GET: api/Comments
         [HttpGet]
-        public async Task<IActionResult> GetComments(int idPost)
+        public async Task<IActionResult> GetComments(Guid idPost)
         {
             try
             {
@@ -54,7 +54,7 @@ namespace BlogServer.Controllers
 
         // GET: api/Comments/5
         [HttpGet("{id}", Name = "GetComment")]
-        public async Task<IActionResult> GetComment(int id)
+        public async Task<IActionResult> GetComment(Guid id)
         {
             try
             {
@@ -74,7 +74,7 @@ namespace BlogServer.Controllers
         // PUT: api/Comments/5
         // To protect from overcommenting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutComment(int id, CommentPutRequest commentPutRequest)
+        public async Task<IActionResult> PutComment(Guid id, CommentPutRequest commentPutRequest)
         {
             try
             {
@@ -141,7 +141,7 @@ namespace BlogServer.Controllers
 
         // DELETE: api/Comments/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteComment(int id)
+        public async Task<IActionResult> DeleteComment(Guid id)
         {
             try
             {

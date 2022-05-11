@@ -9,7 +9,7 @@ namespace BlogService.ExtensionMethod
     {
         public static IServiceCollection AddConfigIdentity(this IServiceCollection services, IConfiguration config)
         {
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentity<AppUser, IdentityRole>()
                .AddEntityFrameworkStores<BlogContext>()
                .AddDefaultTokenProviders();
 

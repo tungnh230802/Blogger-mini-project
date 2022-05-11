@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogDAL.Migrations
 {
     [DbContext(typeof(BlogContext))]
-    [Migration("20220509032701_remote_Tile_comment")]
-    partial class remote_Tile_comment
+    [Migration("20220511040220_identitytable")]
+    partial class identitytable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,82 +21,7 @@ namespace BlogDAL.Migrations
                 .HasAnnotation("ProductVersion", "5.0.16")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("BlogDAL.Models.Comment", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("content")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("createAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("parentId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("postId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("updateAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("userId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("parentId");
-
-                    b.HasIndex("postId");
-
-                    b.HasIndex("userId");
-
-                    b.ToTable("Comments");
-                });
-
-            modelBuilder.Entity("BlogDAL.Models.Post", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("authorId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("content")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("createAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("slug")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("summary")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("thumbnail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("updateAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("authorId");
-
-                    b.ToTable("Posts");
-                });
-
-            modelBuilder.Entity("BlogDAL.Models.User", b =>
+            modelBuilder.Entity("BlogDAL.Models.AppUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -160,9 +85,7 @@ namespace BlogDAL.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<DateTime>("registerAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 5, 9, 10, 27, 0, 772, DateTimeKind.Local).AddTicks(821));
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -175,6 +98,79 @@ namespace BlogDAL.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("BlogDAL.Models.Comment", b =>
+                {
+                    b.Property<Guid>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("createAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("parentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("postId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("updateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("userId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("parentId");
+
+                    b.HasIndex("postId");
+
+                    b.HasIndex("userId");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("BlogDAL.Models.Post", b =>
+                {
+                    b.Property<Guid>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("authorId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("createAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("slug")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("summary")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("thumbnail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("updateAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("authorId");
+
+                    b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -202,6 +198,20 @@ namespace BlogDAL.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "30e61782-f64d-4f23-9430-d9f10fe725ad",
+                            ConcurrencyStamp = "1de20c1a-3735-421e-9b5f-4cd6aefba1bc",
+                            Name = "member"
+                        },
+                        new
+                        {
+                            Id = "951e8cd3-7dea-4f04-a0e5-bfdd7eedb602",
+                            ConcurrencyStamp = "ecfa2d57-1759-4195-85dd-46857d342724",
+                            Name = "moderator"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -318,7 +328,7 @@ namespace BlogDAL.Migrations
                         .WithMany("comments")
                         .HasForeignKey("postId");
 
-                    b.HasOne("BlogDAL.Models.User", "userComment")
+                    b.HasOne("BlogDAL.Models.AppUser", "userComment")
                         .WithMany("comments")
                         .HasForeignKey("userId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -333,7 +343,7 @@ namespace BlogDAL.Migrations
 
             modelBuilder.Entity("BlogDAL.Models.Post", b =>
                 {
-                    b.HasOne("BlogDAL.Models.User", "userPost")
+                    b.HasOne("BlogDAL.Models.AppUser", "userPost")
                         .WithMany("posts")
                         .HasForeignKey("authorId");
 
@@ -351,7 +361,7 @@ namespace BlogDAL.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("BlogDAL.Models.User", null)
+                    b.HasOne("BlogDAL.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -360,7 +370,7 @@ namespace BlogDAL.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("BlogDAL.Models.User", null)
+                    b.HasOne("BlogDAL.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -375,7 +385,7 @@ namespace BlogDAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BlogDAL.Models.User", null)
+                    b.HasOne("BlogDAL.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -384,11 +394,18 @@ namespace BlogDAL.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("BlogDAL.Models.User", null)
+                    b.HasOne("BlogDAL.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("BlogDAL.Models.AppUser", b =>
+                {
+                    b.Navigation("comments");
+
+                    b.Navigation("posts");
                 });
 
             modelBuilder.Entity("BlogDAL.Models.Comment", b =>
@@ -399,13 +416,6 @@ namespace BlogDAL.Migrations
             modelBuilder.Entity("BlogDAL.Models.Post", b =>
                 {
                     b.Navigation("comments");
-                });
-
-            modelBuilder.Entity("BlogDAL.Models.User", b =>
-                {
-                    b.Navigation("comments");
-
-                    b.Navigation("posts");
                 });
 #pragma warning restore 612, 618
         }

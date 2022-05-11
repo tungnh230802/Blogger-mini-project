@@ -26,13 +26,13 @@ namespace BlogBLL.Services
             await _unitOfWork.Save();
         }
 
-        public async Task<IEnumerable<Comment>> GetAll(int idPost)
+        public async Task<IEnumerable<Comment>> GetAll(Guid idPost)
         {
             var comments = await _commentRepository.dbSet.Where(c=>c.postId == idPost).ToListAsync();
             return comments;
         }
 
-        public async Task<Comment> GetById(int id)
+        public async Task<Comment> GetById(Guid id)
         {
             var comment = await _commentRepository.dbSet.FindAsync(id);
 
