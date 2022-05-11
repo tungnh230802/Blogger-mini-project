@@ -2,10 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using BlogDAL.Configurations;
 using BlogDAL.Extension;
+using Microsoft.AspNetCore.Identity;
+using System;
 
 namespace BlogDAL.Models
 {
-    public class BlogContext : IdentityDbContext<AppUser>
+    public class BlogContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>
     {
         #region Constructor
         public BlogContext(DbContextOptions<BlogContext> options) : base(options)
@@ -19,27 +21,30 @@ namespace BlogDAL.Models
         {
             base.OnModelCreating(builder);
 
-            RemoveAspPrefix(builder);
-
             builder.ApplyConfiguration(new PostEntityConfiguration());
             builder.ApplyConfiguration(new CommentEntityConfiguration());
             builder.ApplyConfiguration(new UserEntityConfiguration());
+            ConfigIdentiy(builder);
 
             //seed data
             builder.Seed();
         }
 
-        private static void RemoveAspPrefix(ModelBuilder builder)
+        private static void ConfigIdentiy(ModelBuilder builder)
         {
-            foreach (var entityType in builder.Model.GetEntityTypes())
-            {
-                var tableName = entityType.GetTableName();
-                if (tableName.StartsWith("AspNet"))
-                {
-                    entityType.SetTableName(tableName.Substring(6));
-                }
-            }
+            const string Claims = "AppUserClaims";
+            const string Roles = "AppUserRoles";
+            const string UserLogins = "AppUserLogins";
+            const string RoleClaims = "AppRoleClaims";
+            const string UserTokens = "AppUserTokens";
+
+            builder.Entity<IdentityUserClaim<Guid>>().ToTable(Claims);
+            builder.Entity<IdentityUserRole<Guid>>().ToTable(Roles).HasKey(x => new { x.UserId, x.RoleId });
+            builder.Entity<IdentityUserLogin<Guid>>().ToTable(UserLogins).HasKey(x => x.UserId);
+            builder.Entity<IdentityRoleClaim<Guid>>().ToTable(RoleClaims);
+            builder.Entity<IdentityUserToken<Guid>>().ToTable(UserTokens).HasKey(x => x.UserId);
         }
+
         #endregion
 
         #region Properties

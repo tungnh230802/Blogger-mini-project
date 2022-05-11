@@ -21,8 +21,9 @@ namespace BlogDAL.Migrations
 
             modelBuilder.Entity("BlogDAL.Models.AppUser", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -95,20 +96,20 @@ namespace BlogDAL.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("Users");
+                    b.ToTable("AspNetUsers");
 
                     b.HasData(
                         new
                         {
-                            Id = "69bd714f-9576-45ba-b5b7-f00649be00de",
+                            Id = new Guid("f0149822-569b-4324-9b44-ebec8d524027"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b6a2e5ae-e0c0-483c-a90d-64ed7bd3c636",
+                            ConcurrencyStamp = "db753f56-f6af-4c56-bd6c-747d14221e65",
                             Email = "tungnh230802@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "tungnh230802@gmail.com",
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEP/wG7k5tthiWHP6bqYjelBWVl3eVtgrG2I02w3B1b75OXbosCim+zsq2II9b1trfg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMHG0IjpBsntRBHDqF5NW7eEODr+lgshBfkl31daaMU5mkocjYtmnUEm9bC9BpQmRg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -138,9 +139,8 @@ namespace BlogDAL.Migrations
                     b.Property<DateTime?>("updateAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("userId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("userId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("id");
 
@@ -159,8 +159,8 @@ namespace BlogDAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("authorId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("authorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("content")
                         .HasColumnType("nvarchar(max)");
@@ -190,10 +190,11 @@ namespace BlogDAL.Migrations
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -214,30 +215,30 @@ namespace BlogDAL.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("Roles");
+                    b.ToTable("AspNetRoles");
 
                     b.HasData(
                         new
                         {
-                            Id = "5dc57faf-2f6e-460a-b7df-1f9062a3326d",
-                            ConcurrencyStamp = "b873e7c0-9147-488b-8d72-3afa2dea5fbe",
+                            Id = new Guid("033f0c31-6ad7-4f4f-8516-0f9b77778564"),
+                            ConcurrencyStamp = "b8b46e3d-b8fd-4d10-9ff8-5c580834b9b0",
                             Name = "member"
                         },
                         new
                         {
-                            Id = "43e8dd12-0cc0-4100-9402-90a53d3e5bb2",
-                            ConcurrencyStamp = "e86f23ac-8333-4459-a448-d66863c6ccdd",
+                            Id = new Guid("21268a66-1311-4d2d-98ae-ae130bfbb667"),
+                            ConcurrencyStamp = "d7ec02f6-9f5c-401b-8860-3e3ce37dd4f3",
                             Name = "moderator"
                         },
                         new
                         {
-                            Id = "8d04dce2-969a-435d-bba4-df3f325983dc",
-                            ConcurrencyStamp = "92c58323-d7c7-4dd4-ae97-f80ddfe9e949",
+                            Id = new Guid("cd9eb2d2-78ee-4390-b1bc-97b91347ffcb"),
+                            ConcurrencyStamp = "6969eb2a-07f2-4474-aa2e-e57534422528",
                             Name = "admin"
                         });
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -250,18 +251,17 @@ namespace BlogDAL.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("RoleClaims");
+                    b.ToTable("AppRoleClaims");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -274,78 +274,74 @@ namespace BlogDAL.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserClaims");
+                    b.ToTable("AppUserClaims");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("LoginProvider", "ProviderKey");
+                    b.HasKey("UserId");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserLogins");
+                    b.ToTable("AppUserLogins");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("UserId", "RoleId");
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("UserRoles");
+                    b.ToTable("AppUserRoles");
 
                     b.HasData(
                         new
                         {
-                            UserId = "69bd714f-9576-45ba-b5b7-f00649be00de",
-                            RoleId = "8d04dce2-969a-435d-bba4-df3f325983dc"
+                            UserId = new Guid("f0149822-569b-4324-9b44-ebec8d524027"),
+                            RoleId = new Guid("cd9eb2d2-78ee-4390-b1bc-97b91347ffcb")
                         });
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("UserId", "LoginProvider", "Name");
+                    b.HasKey("UserId");
 
-                    b.ToTable("UserTokens");
+                    b.ToTable("AppUserTokens");
                 });
 
             modelBuilder.Entity("BlogDAL.Models.Comment", b =>
@@ -375,21 +371,23 @@ namespace BlogDAL.Migrations
                 {
                     b.HasOne("BlogDAL.Models.AppUser", "userPost")
                         .WithMany("posts")
-                        .HasForeignKey("authorId");
+                        .HasForeignKey("authorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("userPost");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.HasOne("BlogDAL.Models.AppUser", null)
                         .WithMany()
@@ -398,7 +396,7 @@ namespace BlogDAL.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.HasOne("BlogDAL.Models.AppUser", null)
                         .WithMany()
@@ -407,9 +405,9 @@ namespace BlogDAL.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -422,7 +420,7 @@ namespace BlogDAL.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
                     b.HasOne("BlogDAL.Models.AppUser", null)
                         .WithMany()

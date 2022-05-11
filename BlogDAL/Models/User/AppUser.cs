@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace BlogDAL.Models
 {
-    public class AppUser : IdentityUser
+    public class AppUser : IdentityUser<Guid>
     {
         public DateTime registerAt { get; set; }
         public DateTime? lastLogin { get; set; }

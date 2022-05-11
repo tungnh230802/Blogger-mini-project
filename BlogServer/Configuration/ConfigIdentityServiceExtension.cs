@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace BlogService.ExtensionMethod
 {
@@ -9,9 +10,13 @@ namespace BlogService.ExtensionMethod
     {
         public static IServiceCollection AddConfigIdentity(this IServiceCollection services, IConfiguration config)
         {
-            services.AddIdentity<AppUser, IdentityRole>()
+            services.AddIdentity<AppUser, IdentityRole<Guid>>()
                .AddEntityFrameworkStores<BlogContext>()
                .AddDefaultTokenProviders();
+            //services.AddIdentity<AppUser, IdentityRole<Guid>()
+            //         .AddEntityFrameworkStores<BlogContext>()
+            //         .AddDefaultUI()
+            //         .AddDefaultTokenProviders();
 
 
             services.Configure<IdentityOptions>(options =>

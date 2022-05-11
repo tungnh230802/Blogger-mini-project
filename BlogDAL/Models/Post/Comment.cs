@@ -10,7 +10,7 @@ namespace BlogDAL.Models
         public Guid? parentId { get; set; }
         public Guid? postId { get; set; }
         public string content { get; set; }
-        public string userId { get; set; }
+        public Guid userId { get; set; }
         public Post post { get; set; }
         public Comment comment { get; set; }
         public ICollection<Comment> comments { get; set; }

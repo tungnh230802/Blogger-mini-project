@@ -7,7 +7,7 @@ namespace BlogDAL.Models
     {
         #region Properties
         public Guid id { get; set; }
-        public string authorId { get; set; }
+        public Guid authorId { get; set; }
         public AppUser userPost { get; set; }
         public string title { get; set; }
         public string slug { get; set; }

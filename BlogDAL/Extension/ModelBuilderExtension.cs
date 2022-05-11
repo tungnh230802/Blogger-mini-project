@@ -9,14 +9,14 @@ namespace BlogDAL.Extension
     {
         public static void Seed(this ModelBuilder builder)
         {
-            builder.Entity<IdentityRole>().HasData(
-                new IdentityRole { Name = "member" },
-                new IdentityRole { Name = "moderator"});
+            builder.Entity<IdentityRole<Guid>>().HasData(
+                new IdentityRole<Guid> { Name = "member" ,Id = Guid.NewGuid()},
+                new IdentityRole<Guid> { Name = "moderator", Id = Guid.NewGuid() });
 
 
-            var roleId = new Guid("8D04DCE2-969A-435D-BBA4-DF3F325983DC").ToString();
-            var adminId = new Guid("69BD714F-9576-45BA-B5B7-F00649BE00DE").ToString();
-            builder.Entity<IdentityRole>().HasData(new IdentityRole
+            var roleId = Guid.NewGuid();
+            var adminId = Guid.NewGuid();
+            builder.Entity<IdentityRole<Guid>>().HasData(new IdentityRole<Guid>
             {
                 Id = roleId,
                 Name = "admin",
@@ -35,7 +35,7 @@ namespace BlogDAL.Extension
                 SecurityStamp = string.Empty,
             });
 
-            builder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>
+            builder.Entity<IdentityUserRole<Guid>>().HasData(new IdentityUserRole<Guid>
             {
                 RoleId = roleId,
                 UserId = adminId
