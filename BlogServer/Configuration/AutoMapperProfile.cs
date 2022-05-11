@@ -2,14 +2,18 @@
 using BlogBLL.ModelRequest;
 using BlogBLL.ModelRequest.Comment;
 using BlogBLL.ModelRequest.Post;
+using BlogBLL.Utility.Common;
 using BlogDAL.Models;
+using System;
 
 namespace BlogServer.Configuration
 {
     public class AutoMapperProfile : Profile
     {
+        //private IStorageService _storageService;
         public AutoMapperProfile()
         {
+            //_storageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
             // post
             CreateMap<PostRequest, Post>();
             CreateMap<Post, PostRequest>();

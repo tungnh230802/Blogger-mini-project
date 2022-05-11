@@ -23,6 +23,7 @@ namespace BlogServer
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                })
+            ;
     }
 }

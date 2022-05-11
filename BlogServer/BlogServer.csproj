@@ -30,4 +30,8 @@
 		<ProjectReference Include="..\BlogDAL\BlogDAL.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="wwwroot\user-content\" />
+	</ItemGroup>
+
 </Project>

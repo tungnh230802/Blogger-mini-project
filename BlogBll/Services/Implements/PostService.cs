@@ -2,14 +2,18 @@
 using BlogBLL.ModelRequest.Post;
 using BlogBLL.Services.Interfaces;
 using BlogBLL.Utility.BlogException;
+using BlogBLL.Utility.Common;
 using BlogDAL.Models;
 using BlogRepository.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
+using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace BlogBLL.Services
@@ -18,10 +22,12 @@ namespace BlogBLL.Services
     {
         private readonly IPostRepository _postRepository;
         private IUnitOfWork _unitOfWork;
-        public PostService(IPostRepository postRepository, IUnitOfWork unitOfWork)
+        private IStorageService _storageService;
+        public PostService(IPostRepository postRepository, IUnitOfWork unitOfWork, IStorageService storageService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _postRepository = postRepository ?? throw new ArgumentNullException(nameof(postRepository));
+            _storageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
         }
         public async Task Create(Post post)
         {

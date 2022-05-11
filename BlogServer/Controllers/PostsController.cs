@@ -10,6 +10,7 @@ using BlogBLL.ModelRequest.Post;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using BlogBLL;
+using BlogBLL.Utility.Common;
 
 namespace BlogServer.Controllers
 {
@@ -22,14 +23,16 @@ namespace BlogServer.Controllers
         private readonly IPostService _postService;
         private readonly ILogger<PostsController> _logger;
         private readonly IMapper _mapper;
+        private readonly IStorageService _storageService;
         #endregion
 
         #region  Constructor
-        public PostsController(IPostService postService, ILogger<PostsController> logger, IMapper mapper)
+        public PostsController(IPostService postService, ILogger<PostsController> logger, IMapper mapper, IStorageService storageService)
         {
             _postService = postService ?? throw new ArgumentNullException(nameof(postService));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _storageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
         }
         #endregion
 
@@ -55,7 +58,7 @@ namespace BlogServer.Controllers
 
         // GET: api/Posts/5
         [HttpGet("{id}", Name = "GetPost")]
-        public async Task<IActionResult> GetPost(Guid id)
+        public async Task<IActionResult> GetPost([FromQuery]Guid id)
         {
             try
             {
@@ -75,7 +78,7 @@ namespace BlogServer.Controllers
         // PUT: api/Posts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPost(Guid id, PostPutRequest postPutRequest)
+        public async Task<IActionResult> PutPost([FromForm]Guid id, [FromForm]PostPutRequest postPutRequest)
         {
             try
             {
@@ -97,6 +100,7 @@ namespace BlogServer.Controllers
                 }
 
                 _mapper.Map(postPutRequest, post);
+                post.thumbnail = await _storageService.SaveFile(postPutRequest.thumbnail);
                 await _postService.Update(post);
 
                 return Ok(new Response<PostRequest>());
@@ -111,7 +115,7 @@ namespace BlogServer.Controllers
         // POST: api/Posts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Post>> CreatePost(PostCreateRequest postCreateRequest)
+        public async Task<ActionResult<Post>> CreatePost([FromForm]PostCreateRequest postCreateRequest)
         {
             try
             {
@@ -126,6 +130,7 @@ namespace BlogServer.Controllers
                     return BadRequest(new Response<PostRequest>("Invalid model object"));
                 }
                 var post = _mapper.Map<Post>(postCreateRequest);
+                post.thumbnail = await _storageService.SaveFile(postCreateRequest.thumbnail);
 
                 await _postService.Create(post);
 
@@ -142,7 +147,7 @@ namespace BlogServer.Controllers
 
         // DELETE: api/Posts/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePost(Guid id)
+        public async Task<IActionResult> DeletePost([FromQuery] Guid id)
         {
             try
             {

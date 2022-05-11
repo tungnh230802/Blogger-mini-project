@@ -1,5 +1,6 @@
 ﻿using BlogBLL.Services;
 using BlogBLL.Services.Interfaces;
+using BlogBLL.Utility.Common;
 using BlogDAL.Models;
 using BlogRepository;
 using BlogRepository.Interfaces;
@@ -27,6 +28,7 @@ namespace BlogService.ExtensionMethod
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IStorageService, FileStorageService>();
 
             return services;
         }

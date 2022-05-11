@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace BlogBLL.ModelRequest
 {
@@ -10,7 +11,7 @@ namespace BlogBLL.ModelRequest
         [StringLength(50)]
         public string title { get; set; }
         [Required]
-        public string thumbnail { get; set; }
+        public IFormFile thumbnail { get; set; }
         [Required]
         public string content { get; set; }
     }
