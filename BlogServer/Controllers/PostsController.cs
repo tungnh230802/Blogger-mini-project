@@ -9,12 +9,13 @@ using System;
 using BlogBLL.ModelRequest.Post;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
+using BlogBLL;
 
 namespace BlogServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class PostsController : ControllerBase
     {
         #region Properties
@@ -26,9 +27,9 @@ namespace BlogServer.Controllers
         #region  Constructor
         public PostsController(IPostService postService, ILogger<PostsController> logger, IMapper mapper)
         {
-            _postService = postService;
-            _logger = logger;
-            _mapper = mapper;
+            _postService = postService ?? throw new ArgumentNullException(nameof(postService));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
         #endregion
 
@@ -43,12 +44,12 @@ namespace BlogServer.Controllers
                 _logger.LogInformation($"Returned all posts from database.");
 
                 var postsRequest = _mapper.Map<IEnumerable<PostRequest>>(posts);
-                return Ok(postsRequest);
+                return Ok(new Response<IEnumerable<PostRequest>>(postsRequest,""));
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Something went wrong inside GetAllPost action: {ex.Message}");
-                return StatusCode(500, "Internal server error");
+                return StatusCode(500, new Response<PostRequest>("Internal server error"));
             }
         }
 
@@ -62,12 +63,12 @@ namespace BlogServer.Controllers
                 _logger.LogInformation($"Returned post from database.");
 
                 var postRequest = _mapper.Map<PostRequest>(post);
-                return Ok(postRequest);
+                return Ok(new Response<PostRequest>(postRequest));
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Something went wrong inside GetByIdPost action: {ex.Message}");
-                return StatusCode(500, "Internal server error");
+                return StatusCode(500, new Response<PostRequest>("Internal server error"));
             }
         }
 
@@ -81,29 +82,29 @@ namespace BlogServer.Controllers
                 if (postPutRequest is null)
                 {
                     _logger.LogError("Post object sent from client is null.");
-                    return BadRequest("Post object is null");
+                    return BadRequest(new Response<PostRequest>("Post object is null"));
                 }
                 if (!ModelState.IsValid)
                 {
                     _logger.LogError("Invalid owner object sent from client.");
-                    return BadRequest("Invalid model object");
+                    return BadRequest(new Response<PostRequest>("Invalid model object"));
                 }
                 var post = await _postService.GetById(id);
                 if (post is null)
                 {
                     _logger.LogError($"post with id: {id}, hasn't been found in db.");
-                    return NotFound();
+                    return NotFound(new Response<PostRequest>("Not found"));
                 }
 
                 _mapper.Map(postPutRequest, post);
                 await _postService.Update(post);
 
-                return NoContent();
+                return Ok(new Response<PostRequest>());
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Something went wrong inside Update post action: {ex.Message}");
-                return StatusCode(500, "Internal server error");
+                return StatusCode(500, new Response<PostRequest>("Internal server error"));
             }
         }
 
@@ -117,12 +118,12 @@ namespace BlogServer.Controllers
                 if (postCreateRequest is null)
                 {
                     _logger.LogError("post object sent from client is null.");
-                    return BadRequest("postRequest object is null");
+                    return BadRequest(new Response<PostRequest>("postRequest object is null"));
                 }
                 if (!ModelState.IsValid)
                 {
                     _logger.LogError("Invalid post object sent from client.");
-                    return BadRequest("Invalid model object");
+                    return BadRequest(new Response<PostRequest>("Invalid model object"));
                 }
                 var post = _mapper.Map<Post>(postCreateRequest);
 
@@ -130,12 +131,12 @@ namespace BlogServer.Controllers
 
                 var postRequest = _mapper.Map<PostRequest>(post);
 
-                return CreatedAtRoute("GetPost", new { id = postRequest.id }, postRequest);
+                return CreatedAtRoute("GetPost", new { id = postRequest.id },new Response<PostRequest>(postRequest));
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Something went wrong inside CreatePost action: {ex.Message}");
-                return StatusCode(500, "Internal server error");
+                return StatusCode(500, new Response<PostRequest>("Internal server error"));
             }
         }
 
@@ -149,15 +150,15 @@ namespace BlogServer.Controllers
                 if (post == null)
                 {
                     _logger.LogError($"post with id: {id}, hasn't been found in db.");
-                    return NotFound();
+                    return NotFound(new Response<PostRequest>("Not found"));
                 }
                 await _postService.Delete(post);
-                return NoContent();
+                return Ok(new Response<PostRequest>());
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Something went wrong inside Delete post action: {ex.Message}");
-                return StatusCode(500, "Internal server error");
+                return StatusCode(500, new Response<PostRequest>("Internal server error"));
             }
         }
         #endregion

@@ -9,9 +9,9 @@ namespace BlogBLL.ModelRequest.Comment
 {
     public class CommentCreateRequest
     {
-        public int? parentId { get; set; }
+        public Guid parentId { get; set; }
         [Required]
-        public int postId { get; set; }
+        public Guid postId { get; set; }
         [Required]
         [MaxLength(1000)]
         public string content { get; set; }

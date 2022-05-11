@@ -1,10 +1,15 @@
-﻿using BlogBLL.Services.Interfaces;
+﻿using BlogBLL.ModelRequest;
+using BlogBLL.ModelRequest.Post;
+using BlogBLL.Services.Interfaces;
+using BlogBLL.Utility.BlogException;
 using BlogDAL.Models;
-using BlogRepository;
 using BlogRepository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Validation;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BlogBLL.Services
@@ -15,19 +20,106 @@ namespace BlogBLL.Services
         private IUnitOfWork _unitOfWork;
         public PostService(IPostRepository postRepository, IUnitOfWork unitOfWork)
         {
-            _unitOfWork = unitOfWork;
-            _postRepository = postRepository;
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _postRepository = postRepository ?? throw new ArgumentNullException(nameof(postRepository));
         }
         public async Task Create(Post post)
         {
-            post.createAt = DateTime.Now;
-            GetSummaryPost(post);
-            GetSlugPost(post);
+            if (post == null) throw new ArgumentException(nameof(post));
 
-            await _postRepository.dbSet.AddAsync(post);
-            await _unitOfWork.Save();
+            try
+            {
+                post.id = Guid.NewGuid();
+                post.createAt = DateTime.Now;
+                GetSummaryPost(post);
+                GetSlugPost(post);
+
+                await _postRepository.dbSet.AddAsync(post);
+                await _unitOfWork.Save();
+            }
+            catch (DbEntityValidationException ex)
+            {
+                throw new DbEntityValidationException(ex.Message);
+            }
         }
 
+
+        public async Task<IEnumerable<Post>> GetAll()
+        {
+            try
+            {
+                var posts = await _postRepository.dbSet.ToListAsync();
+
+                return posts;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<PageResult<Post>> GetAllPaging(PostPagingRequest postPagingRequest)
+        {
+            var query = _postRepository.dbSet.Where(p => p.title.Contains(postPagingRequest.keywork) || p.content.Contains(postPagingRequest.keywork));
+
+            if (postPagingRequest.authorIds.Count > 0)
+            {
+                query = query.Where(p => postPagingRequest.authorIds.Contains(p.authorId));
+            }
+            int totalRow = await query.CountAsync();
+
+            var data = await query.Skip((postPagingRequest.PageIndex - 1) * postPagingRequest.PageSize).Take(postPagingRequest.PageSize).ToListAsync();
+
+            var pageResult = new PageResult<Post>()
+            {
+                TotalRecord = totalRow,
+                Items = data
+            };
+
+            return pageResult;
+        }
+
+        public async Task<Post> GetById(Guid id)
+        {
+            try
+            {
+                var post = await _postRepository.dbSet.FindAsync(id);
+                if (post == null) throw new BlogException($"Can't find post: {id}");
+
+                return post;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task Update(Post post)
+        {
+            try
+            {
+                post.updateAt = DateTime.Now;
+                _postRepository.dbSet.Update(post);
+                await _unitOfWork.Save();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new DbUpdateException(ex.Message);
+            }
+        }
+
+        public async Task Delete(Post post)
+        {
+            try
+            {
+                _postRepository.dbSet.Remove(post);
+                await _unitOfWork.Save();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
         private static void GetSlugPost(Post post)
         {
             post.slug = post.title.Replace(" ", "-");
@@ -45,33 +137,6 @@ namespace BlogBLL.Services
                 post.summary = post.content.Substring(0, MAX_LENGTH_SUMMARY) + "...";
             else
                 post.summary = post.content;
-        }
-
-        public async Task<IEnumerable<Post>> GetAll()
-        {
-            var posts = await _postRepository.dbSet.ToListAsync();
-
-            return posts;
-        }
-
-        public async Task<Post> GetById(Guid id)
-        {
-            var post = await _postRepository.dbSet.FindAsync(id);
-
-            return post;
-        }
-
-        public async Task Update(Post post)
-        {
-            post.updateAt = DateTime.Now;
-            _postRepository.dbSet.Update(post);
-            await _unitOfWork.Save();
-        }
-
-        public async Task Delete(Post post)
-        {
-            _postRepository.dbSet.Remove(post);
-            await _unitOfWork.Save();
         }
     }
 }

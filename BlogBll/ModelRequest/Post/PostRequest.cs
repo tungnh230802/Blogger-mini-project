@@ -4,7 +4,7 @@ namespace BlogBLL.ModelRequest
 {
     public class PostRequest
     {
-        public int id { get; set; }
+        public Guid id { get; set; }
         public string authorId { get; set; }
         public string title { get; set; }
         public string slug { get; set; }

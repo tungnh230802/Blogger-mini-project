@@ -21,39 +21,58 @@ namespace BlogBLL.Services
         private IMapper _mapper;
         public UserService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IConfiguration configuration, IMapper mapper)
         {
-            _signInManager = signInManager;
-            _userManager = userManager;
-            _configuration = configuration;
-            _mapper = mapper;
+            _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public async Task<string> Authenticate(LoginRequest authenticateRequest)
         {
-            var user = await _userManager.FindByNameAsync(authenticateRequest.Username);
-            if (user == null)
-                return null;
+            if (authenticateRequest == null) throw new ArgumentNullException(nameof(authenticateRequest));
 
-            var result = await _signInManager.PasswordSignInAsync(user, authenticateRequest.Password, authenticateRequest.Remember, false);
+            try
+            {
+                var user = await _userManager.FindByNameAsync(authenticateRequest.Username);
+                if (user == null)
+                    throw new Exception("Can't find user");
 
-            if (!result.Succeeded)
-                return null;
+                var result = await _signInManager.PasswordSignInAsync(user, authenticateRequest.Password, authenticateRequest.Remember, false);
 
-            await _userManager.AddToRolesAsync(user, new[] { "Member" });
+                if (!result.Succeeded)
+                    return null;
 
-            Claim[] claims = await GetClaim(user);
+                Claim[] claims = await GetClaim(user);
 
-            return GetToken(claims);
+                return GetToken(claims);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<bool> Register(RegisterRequest registerRequest)
         {
-            var user = _mapper.Map<AppUser>(registerRequest);
+            if (registerRequest == null) throw new ArgumentNullException(nameof(registerRequest));
 
-            var result = await _userManager.CreateAsync(user, registerRequest.Password);
-
-            if (result.Succeeded)
+            try
             {
-                return true;
+                var user = _mapper.Map<AppUser>(registerRequest);
+                user.Id = Guid.NewGuid();
+
+                var result = await _userManager.CreateAsync(user, registerRequest.Password);
+
+                await _userManager.AddToRoleAsync(user, "member");
+
+                if (result.Succeeded)
+                {
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
             return false;
         }
@@ -61,6 +80,8 @@ namespace BlogBLL.Services
         private async Task<Claim[]> GetClaim(AppUser user)
         {
             var roles = await _userManager.GetRolesAsync(user);
+            if (roles == null) throw new Exception("Can't get role of user");
+
             var claims = new[]
             {
                 //new Claim(ClaimTypes.Email, user.Email),

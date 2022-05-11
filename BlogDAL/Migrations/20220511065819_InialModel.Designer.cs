@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogDAL.Migrations
 {
     [DbContext(typeof(BlogContext))]
-    [Migration("20220511043551_renameIdentityTable")]
-    partial class renameIdentityTable
+    [Migration("20220511065819_InialModel")]
+    partial class InialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -103,15 +103,15 @@ namespace BlogDAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("f0149822-569b-4324-9b44-ebec8d524027"),
+                            Id = new Guid("bf9bde1d-f85f-4181-8534-652b91fc5f4e"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "db753f56-f6af-4c56-bd6c-747d14221e65",
+                            ConcurrencyStamp = "4221b43a-2bfb-41eb-a07e-5ef264c9cd3e",
                             Email = "tungnh230802@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "tungnh230802@gmail.com",
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEMHG0IjpBsntRBHDqF5NW7eEODr+lgshBfkl31daaMU5mkocjYtmnUEm9bC9BpQmRg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEA28Alpuar8dK+Hb9uXK1DDO+zjw4Ktev5snUnAQfGPbWWmBSf2hhP5CZR2As7HPwA==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -222,20 +222,20 @@ namespace BlogDAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("033f0c31-6ad7-4f4f-8516-0f9b77778564"),
-                            ConcurrencyStamp = "b8b46e3d-b8fd-4d10-9ff8-5c580834b9b0",
+                            Id = new Guid("2062da20-327a-4a4b-92b7-87adb2688432"),
+                            ConcurrencyStamp = "a1fa9fde-d18b-48bf-aadd-372e1a3d1bc2",
                             Name = "member"
                         },
                         new
                         {
-                            Id = new Guid("21268a66-1311-4d2d-98ae-ae130bfbb667"),
-                            ConcurrencyStamp = "d7ec02f6-9f5c-401b-8860-3e3ce37dd4f3",
+                            Id = new Guid("c8b9b4c3-b76e-445e-8d66-744611dedf9e"),
+                            ConcurrencyStamp = "fbe049e4-f233-41eb-b82c-393e403d02e8",
                             Name = "moderator"
                         },
                         new
                         {
-                            Id = new Guid("cd9eb2d2-78ee-4390-b1bc-97b91347ffcb"),
-                            ConcurrencyStamp = "6969eb2a-07f2-4474-aa2e-e57534422528",
+                            Id = new Guid("44b768ce-d6d6-407d-b09b-42cbd6fabc57"),
+                            ConcurrencyStamp = "beda1a54-e71f-46f6-b870-53578bd385e7",
                             Name = "admin"
                         });
                 });
@@ -322,8 +322,8 @@ namespace BlogDAL.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = new Guid("f0149822-569b-4324-9b44-ebec8d524027"),
-                            RoleId = new Guid("cd9eb2d2-78ee-4390-b1bc-97b91347ffcb")
+                            UserId = new Guid("bf9bde1d-f85f-4181-8534-652b91fc5f4e"),
+                            RoleId = new Guid("44b768ce-d6d6-407d-b09b-42cbd6fabc57")
                         });
                 });
 

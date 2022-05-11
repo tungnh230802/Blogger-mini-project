@@ -16,29 +16,6 @@ namespace BlogServer
         {
             var host = CreateHostBuilder(args).Build();
             await host.RunAsync();
-            //IServiceScope scope = await SeedData(host);
-
-        }
-
-        private static async Task<IServiceScope> SeedData(IHost host)
-        {
-            var scope = host.Services.CreateScope();
-            var services = scope.ServiceProvider;
-            try
-            {
-                var context = services.GetRequiredService<BlogContext>();
-                var userManager = services.GetRequiredService<UserManager<AppUser>>();
-                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                await context.Database.MigrateAsync();
-                //await BlogDAL.Data.SeedData.SeedUsers(userManager, roleManager);
-            }
-            catch (Exception ex)
-            {
-                var logger = services.GetRequiredService<ILogger<Program>>();
-                logger.LogError(ex, "An error occurred during migration");
-            }
-
-            return scope;
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

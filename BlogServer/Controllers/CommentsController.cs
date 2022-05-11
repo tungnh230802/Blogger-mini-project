@@ -9,6 +9,7 @@ using AutoMapper;
 using System.Collections.Generic;
 using BlogBLL.ModelRequest.Comment;
 using Microsoft.AspNetCore.Authorization;
+using BlogBLL;
 
 namespace BlogServer.Controllers
 {
@@ -26,9 +27,9 @@ namespace BlogServer.Controllers
         #region  Constructor
         public CommentsController(ICommentService commentService, ILogger<CommentsController> logger, IMapper mapper)
         {
-            _commentService = commentService;
-            _logger = logger;
-            _mapper = mapper;
+            _commentService = commentService ?? throw new ArgumentNullException(nameof(commentService));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
         #endregion
 
@@ -43,12 +44,14 @@ namespace BlogServer.Controllers
                 _logger.LogInformation($"Returned all comments of post id:{idPost} from database.");
 
                 var commentsRequest = _mapper.Map<IEnumerable<CommentRequest>>(comments);
-                return Ok(commentsRequest);
+
+                return Ok(new Response<IEnumerable<CommentRequest>>(commentsRequest));
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Something went wrong inside GetAllComment of post id:{idPost} action: {ex.Message}");
-                return StatusCode(500, "Internal server error");
+
+                return StatusCode(500, new Response<CommentRequest>("Internal server error: "));
             }
         }
 
@@ -62,12 +65,13 @@ namespace BlogServer.Controllers
                 _logger.LogInformation($"Returned comment from database.");
 
                 var commentRequest = _mapper.Map<CommentRequest>(comment);
-                return Ok(commentRequest);
+                return Ok(new Response<CommentRequest>(commentRequest));
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Something went wrong inside GetByIdComment action: {ex.Message}");
-                return StatusCode(500, "Internal server error");
+
+                return StatusCode(500, new Response<CommentRequest>("Internal server error: "));
             }
         }
 
@@ -81,29 +85,29 @@ namespace BlogServer.Controllers
                 if (commentPutRequest is null)
                 {
                     _logger.LogError("Comment object sent from client is null.");
-                    return BadRequest("Comment object is null");
+                    return BadRequest(new Response<CommentRequest>("Comment object is null"));
                 }
                 if (!ModelState.IsValid)
                 {
                     _logger.LogError("Invalid owner object sent from client.");
-                    return BadRequest("Invalid model object");
+                    return BadRequest(new Response<CommentRequest>("Invalid model object"));
                 }
                 var comment = await _commentService.GetById(id);
                 if (comment is null)
                 {
                     _logger.LogError($"comment with id: {id}, hasn't been found in db.");
-                    return NotFound();
+                    return NotFound(new Response<CommentRequest>("Not found"));
                 }
 
                 _mapper.Map(commentPutRequest, comment);
                 await _commentService.Update(comment);
 
-                return NoContent();
+                return Ok(new Response<CommentRequest>());
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Something went wrong inside Update comment action: {ex.Message}");
-                return StatusCode(500, "Internal server error");
+                return StatusCode(500, new Response<CommentRequest>("Internal server error: "));
             }
         }
 
@@ -117,12 +121,12 @@ namespace BlogServer.Controllers
                 if (commentCreateRequest is null)
                 {
                     _logger.LogError("comment object sent from client is null.");
-                    return BadRequest("commentRequest object is null");
+                    return BadRequest(new Response<CommentRequest>("commentRequest object is null"));
                 }
                 if (!ModelState.IsValid)
                 {
                     _logger.LogError("Invalid comment object sent from client.");
-                    return BadRequest("Invalid model object");
+                    return BadRequest(new Response<CommentRequest>("Invalid model object"));
                 }
                 var comment = _mapper.Map<Comment>(commentCreateRequest);
 
@@ -130,12 +134,12 @@ namespace BlogServer.Controllers
 
                 var commentRequest = _mapper.Map<CommentRequest>(comment);
 
-                return CreatedAtRoute("GetComment", new { id = commentRequest.id }, commentRequest);
+                return CreatedAtRoute("GetComment", new { id = commentRequest.id }, new Response<CommentRequest>(commentRequest));
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Something went wrong inside CreateComment action: {ex.Message}");
-                return StatusCode(500, "Internal server error");
+                return StatusCode(500, new Response<CommentRequest>("Internal server error: "));
             }
         }
 
@@ -149,15 +153,15 @@ namespace BlogServer.Controllers
                 if (comment == null)
                 {
                     _logger.LogError($"comment with id: {id}, hasn't been found in db.");
-                    return NotFound();
+                    return NotFound(new Response<CommentRequest>("Not found"));
                 }
                 await _commentService.Delete(comment);
-                return NoContent();
+                return Ok(new Response<CommentRequest>());
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Something went wrong inside Delete comment action: {ex.Message}");
-                return StatusCode(500, "Internal server error");
+                return StatusCode(500, new Response<CommentRequest>("Internal server error"));
             }
         }
         #endregion

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogDAL.Migrations
 {
     [DbContext(typeof(BlogContext))]
-    [Migration("20220511042456_InitialModel")]
-    partial class InitialModel
+    [Migration("20220511080324_InitModel")]
+    partial class InitModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -98,7 +98,26 @@ namespace BlogDAL.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("Users");
+                    b.ToTable("AspNetUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("f5863485-ed94-4ded-b1c9-9e002a55d207"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "faf8c35a-2370-4a57-ac9b-7901b4b52e20",
+                            Email = "tungnh230802@gmail.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "tungnh230802@gmail.com",
+                            NormalizedUserName = "admin",
+                            PasswordHash = "AQAAAAEAACcQAAAAEA8nr0rYOEslaiNFOyTLFZq2m76FtqL+DQNF9ept/a70FdSmI3JvKWHq/kgklne91w==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "",
+                            TwoFactorEnabled = false,
+                            UserName = "admin",
+                            registerAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("BlogDAL.Models.Comment", b =>
@@ -198,7 +217,27 @@ namespace BlogDAL.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("Roles");
+                    b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("3b692361-6cc6-4f62-8595-32b663d1bb4e"),
+                            ConcurrencyStamp = "21fddb9f-af2f-49bd-b652-a74d861b20a5",
+                            Name = "member"
+                        },
+                        new
+                        {
+                            Id = new Guid("37ce767d-31f8-4111-b65f-e6af313bbb5f"),
+                            ConcurrencyStamp = "620db64e-446b-46d1-a6be-56acdbe84c6e",
+                            Name = "moderator"
+                        },
+                        new
+                        {
+                            Id = new Guid("50f8e315-487f-49a8-b916-1a4ad49673dd"),
+                            ConcurrencyStamp = "4dade643-f103-45e9-8c50-f5afa189131c",
+                            Name = "admin"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -221,7 +260,7 @@ namespace BlogDAL.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("RoleClaims");
+                    b.ToTable("AppRoleClaims");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
@@ -244,28 +283,26 @@ namespace BlogDAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserClaims");
+                    b.ToTable("AppUserClaims");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("LoginProvider", "ProviderKey");
+                    b.HasKey("UserId");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserLogins");
+                    b.ToTable("AppUserLogins");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
@@ -280,7 +317,14 @@ namespace BlogDAL.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("UserRoles");
+                    b.ToTable("AppUserRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = new Guid("f5863485-ed94-4ded-b1c9-9e002a55d207"),
+                            RoleId = new Guid("50f8e315-487f-49a8-b916-1a4ad49673dd")
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
@@ -289,17 +333,17 @@ namespace BlogDAL.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("UserId", "LoginProvider", "Name");
+                    b.HasKey("UserId");
 
-                    b.ToTable("UserTokens");
+                    b.ToTable("AppUserTokens");
                 });
 
             modelBuilder.Entity("BlogDAL.Models.Comment", b =>

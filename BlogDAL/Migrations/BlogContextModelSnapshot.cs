@@ -101,15 +101,15 @@ namespace BlogDAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("f0149822-569b-4324-9b44-ebec8d524027"),
+                            Id = new Guid("f5863485-ed94-4ded-b1c9-9e002a55d207"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "db753f56-f6af-4c56-bd6c-747d14221e65",
+                            ConcurrencyStamp = "faf8c35a-2370-4a57-ac9b-7901b4b52e20",
                             Email = "tungnh230802@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "tungnh230802@gmail.com",
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEMHG0IjpBsntRBHDqF5NW7eEODr+lgshBfkl31daaMU5mkocjYtmnUEm9bC9BpQmRg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEA8nr0rYOEslaiNFOyTLFZq2m76FtqL+DQNF9ept/a70FdSmI3JvKWHq/kgklne91w==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -220,20 +220,20 @@ namespace BlogDAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("033f0c31-6ad7-4f4f-8516-0f9b77778564"),
-                            ConcurrencyStamp = "b8b46e3d-b8fd-4d10-9ff8-5c580834b9b0",
+                            Id = new Guid("3b692361-6cc6-4f62-8595-32b663d1bb4e"),
+                            ConcurrencyStamp = "21fddb9f-af2f-49bd-b652-a74d861b20a5",
                             Name = "member"
                         },
                         new
                         {
-                            Id = new Guid("21268a66-1311-4d2d-98ae-ae130bfbb667"),
-                            ConcurrencyStamp = "d7ec02f6-9f5c-401b-8860-3e3ce37dd4f3",
+                            Id = new Guid("37ce767d-31f8-4111-b65f-e6af313bbb5f"),
+                            ConcurrencyStamp = "620db64e-446b-46d1-a6be-56acdbe84c6e",
                             Name = "moderator"
                         },
                         new
                         {
-                            Id = new Guid("cd9eb2d2-78ee-4390-b1bc-97b91347ffcb"),
-                            ConcurrencyStamp = "6969eb2a-07f2-4474-aa2e-e57534422528",
+                            Id = new Guid("50f8e315-487f-49a8-b916-1a4ad49673dd"),
+                            ConcurrencyStamp = "4dade643-f103-45e9-8c50-f5afa189131c",
                             Name = "admin"
                         });
                 });
@@ -320,8 +320,8 @@ namespace BlogDAL.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = new Guid("f0149822-569b-4324-9b44-ebec8d524027"),
-                            RoleId = new Guid("cd9eb2d2-78ee-4390-b1bc-97b91347ffcb")
+                            UserId = new Guid("f5863485-ed94-4ded-b1c9-9e002a55d207"),
+                            RoleId = new Guid("50f8e315-487f-49a8-b916-1a4ad49673dd")
                         });
                 });
 
